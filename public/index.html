@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-TW">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>STU TechPlay 代理人服務</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0A2540",
+            "background-light": "#F8F9FA",
+            "background-dark": "#0D0C15",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "1rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+</head>
+
+<body class="font-display bg-background-dark text-gray-300">
+  <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <div class="absolute top-0 left-0 w-full h-[800px] bg-gradient-to-br from-[#1E1143] via-[#0D0C15] to-[#0D0C15] z-0">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(128,0,128,0.2),_transparent_40%)]">
+      </div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(74,20,140,0.25),_transparent_50%)]">
+      </div>
+    </div>
+    <div class="relative z-10 flex h-full grow flex-col">
+      <header class="flex items-center justify-between whitespace-nowrap px-6 md:px-12 py-4">
+        <div class="flex items-center gap-4 text-white">
+          <div class="size-8 text-purple-400">
+            <span class="material-symbols-outlined !text-3xl">hub</span>
+          </div>
+          <h2 class="text-white text-lg font-bold">STU TechPlay</h2>
+        </div>
+        <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
+          <a class="hover:text-white transition-colors" href="#features">功能特色</a>
+          <a class="hover:text-white transition-colors" href="about.html">RAG 技術</a>
+          <a class="hover:text-white transition-colors" href="#docs">文件</a>
+          <a class="hover:text-white transition-colors" href="#contact">聯絡我們</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="https://github.com/stormteams/AIChat.git" target="_blank"
+            class="flex items-center justify-center size-10 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+            title="GitHub Repo">
+            <svg class="size-6" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+            </svg>
+          </a>
+          <a href="login.html"
+            class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-white text-sm font-medium hover:bg-white/10 transition-colors">登入</a>
+          <a href="login.html"
+            class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors">註冊</a>
+        </div>
+      </header>
+      <main class="flex-1">
+        <section class="text-center px-6 py-20 md:py-32">
+          <h1
+            class="text-4xl md:text-6xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">
+            STU TechPlay 代理人服務</h1>
+          <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-400">輕鬆建立、部署和管理智能 RAG 代理，提供即時、準確的教學支援，提升您的學習體驗。
+          </p>
+          <div class="mt-10 flex justify-center gap-4">
+            <a href="login.html"
+              class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-black text-base font-bold hover:bg-gray-200 transition-colors">免費開始</a>
+            <button
+              class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white/10 text-white text-base font-medium border border-white/20 hover:bg-white/20 transition-colors">觀看示範</button>
+          </div>
+        </section>
+        <section id="features" class="px-6 md:px-12 pb-20 md:pb-32">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-7xl mx-auto">
+            <div class="space-y-12">
+              <div class="flex items-start gap-6">
+                <div
+                  class="flex-shrink-0 size-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-3xl text-purple-400">smart_toy</span>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-white">智能代理 (Intelligent Agents)</h3>
+                  <p class="mt-2 text-gray-400">部署基於您自己資料訓練的 AI 代理。24/7 提供準確、情境感知的答案來回應客戶查詢，減少支援工單並提升滿意度。</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-6">
+                <div
+                  class="flex-shrink-0 size-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-3xl text-purple-400">integration_instructions</span>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-white">輕鬆嵌入 (Easy Embedding)</h3>
+                  <p class="mt-2 text-gray-400">透過簡單的複製貼上程式碼片段，將您的 AI 代理整合到任何網站或應用程式中。自訂外觀和風格，完美匹配您的品牌。</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-6">
+                <div
+                  class="flex-shrink-0 size-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-3xl text-purple-400">hub</span>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-white">多 LLM 支援 (Multi-LLM Support)</h3>
+                  <p class="mt-2 text-gray-400">從多種領先的語言模型中選擇，如 GPT-4、Claude 3 和 Gemini。在模型之間切換，找到成本、速度和功能的最佳平衡。</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-6">
+                <div
+                  class="flex-shrink-0 size-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-3xl text-purple-400">monitoring</span>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-white">即時分析 (Real-time Analytics)</h3>
+                  <p class="mt-2 text-gray-400">從客戶互動中獲得寶貴的見解。追蹤對話主題、監控代理表現，並透過我們直觀的分析儀表板識別改進領域。</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative aspect-[4/3] rounded-2xl bg-gradient-to-br from-purple-900/50 to-indigo-900/30 p-4 border border-white/10 shadow-2xl shadow-purple-900/50">
+              <div
+                class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(128,90,213,0.3),rgba(255,255,255,0))]">
+              </div>
+              <div class="h-full w-full rounded-xl bg-black/30 backdrop-blur-sm border border-white/10 flex flex-col">
+                <div class="flex items-center gap-2 p-3 border-b border-white/10">
+                  <div class="size-2.5 rounded-full bg-red-500"></div>
+                  <div class="size-2.5 rounded-full bg-yellow-500"></div>
+                  <div class="size-2.5 rounded-full bg-green-500"></div>
+                </div>
+                <div class="p-6 flex-1 flex flex-col gap-6">
+                  <div class="flex gap-3">
+                    <div class="size-8 rounded-full bg-gray-700 flex-shrink-0 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-lg text-gray-400">person</span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-gray-800 rounded-tl-none">
+                      <p class="text-sm text-gray-200">如何建立新的代理？</p>
+                    </div>
+                  </div>
+                  <div class="flex gap-3">
+                    <div class="size-8 rounded-full bg-purple-600 flex-shrink-0 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-lg text-white">smart_toy</span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-purple-500/10 rounded-tl-none flex-1">
+                      <p class="text-sm text-gray-200">導航至「代理」面板，點擊「+」圖示以開啟新的配置畫面。</p>
+                      <div class="mt-3 border-t border-purple-500/20 pt-2">
+                        <p class="text-xs font-semibold text-gray-400 mb-1">來源：</p>
+                        <div class="flex items-center gap-2 text-xs text-purple-400">
+                          <span class="material-symbols-outlined !text-sm">description</span>
+                          <span>getting_started.pdf</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="relative mt-auto">
+                    <input
+                      class="form-input w-full rounded-lg border-gray-700 bg-gray-900/50 text-gray-200 placeholder:text-gray-500 pr-10 text-sm"
+                      placeholder="詢問您的代理..." />
+                    <button
+                      class="absolute inset-y-0 right-0 flex items-center justify-center w-10 text-gray-400 hover:text-purple-400">
+                      <span class="material-symbols-outlined !text-xl">send</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="docs" class="px-6 md:px-12 py-20 md:py-32">
+          <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+              <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">文件與資源</h2>
+              <p class="text-lg text-gray-400 max-w-2xl mx-auto">快速開始使用 STU TechPlay 代理人服務</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <a href="#"
+                class="group rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10 hover:border-purple-500/50 transition-all">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">rocket_launch</span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">快速開始
+                    </h3>
+                    <p class="text-sm text-gray-400">5 分鐘內建立您的第一個 AI 代理</p>
+                  </div>
+                </div>
+              </a>
+              <a href="#"
+                class="group rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10 hover:border-purple-500/50 transition-all">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">menu_book</span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">API 文件
+                    </h3>
+                    <p class="text-sm text-gray-400">完整的 API 參考文件與範例</p>
+                  </div>
+                </div>
+              </a>
+              <a href="#"
+                class="group rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10 hover:border-purple-500/50 transition-all">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">code</span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">整合指南
+                    </h3>
+                    <p class="text-sm text-gray-400">將 AI 代理嵌入您的網站或應用</p>
+                  </div>
+                </div>
+              </a>
+              <a href="#"
+                class="group rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10 hover:border-purple-500/50 transition-all">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">school</span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">教學影片
+                    </h3>
+                    <p class="text-sm text-gray-400">觀看逐步教學與最佳實踐</p>
+                  </div>
+                </div>
+              </a>
+              <a href="#"
+                class="group rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10 hover:border-purple-500/50 transition-all">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">quiz</span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">常見問題
+                    </h3>
+                    <p class="text-sm text-gray-400">解答您最常遇到的問題</p>
+                  </div>
+                </div>
+              </a>
+              <a href="#"
+                class="group rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10 hover:border-purple-500/50 transition-all">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">forum</span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">社群論壇
+                    </h3>
+                    <p class="text-sm text-gray-400">與其他使用者交流與分享經驗</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+        <section id="contact" class="px-6 md:px-12 py-20 md:py-32 bg-black/20">
+          <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+              <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">聯絡我們</h2>
+              <p class="text-lg text-gray-400 max-w-2xl mx-auto">有任何問題或建議？我們很樂意為您提供協助</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              <div class="rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">email</span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-bold text-white mb-2">電子郵件</h3>
+                    <p class="text-gray-400 text-sm mb-2">一般詢問與技術支援</p>
+                    <a href="mailto:kenson@stu.edu.tw"
+                      class="text-purple-400 hover:text-purple-300 transition-colors text-sm">kenson@stu.edu.tw</a>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">location_on</span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-bold text-white mb-2">地址</h3>
+                    <p class="text-gray-400 text-sm">樹德科技大學</p>
+                    <p class="text-gray-400 text-sm">電子競技與電腦娛樂科學系</p>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">phone</span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-bold text-white mb-2">電話</h3>
+                    <p class="text-gray-400 text-sm mb-2">週一至週五 09:00 - 17:00</p>
+                    <p class="text-purple-400 text-sm">+886-7-615-8000</p>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 border border-white/10">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="flex-shrink-0 size-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl text-purple-400">schedule</span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-bold text-white mb-2">服務時間</h3>
+                    <p class="text-gray-400 text-sm">週一至週五：09:00 - 17:00</p>
+                    <p class="text-gray-400 text-sm">週六、日：休息</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-8 border border-white/10">
+              <h3 class="text-xl font-bold text-white mb-6">發送訊息</h3>
+              <form class="space-y-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">姓名</label>
+                  <input type="text"
+                    class="w-full rounded-lg border-gray-700 bg-gray-900/50 text-gray-200 placeholder:text-gray-500 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="請輸入您的姓名" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">電子郵件</label>
+                  <input type="email"
+                    class="w-full rounded-lg border-gray-700 bg-gray-900/50 text-gray-200 placeholder:text-gray-500 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="your.email@example.com" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">訊息</label>
+                  <textarea rows="4"
+                    class="w-full rounded-lg border-gray-700 bg-gray-900/50 text-gray-200 placeholder:text-gray-500 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="請輸入您的訊息..."></textarea>
+                </div>
+                <button type="submit"
+                  class="w-full py-3 rounded-lg bg-purple-500 text-white font-bold hover:bg-purple-600 transition-colors">發送訊息</button>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="relative z-10 border-t border-white/10 bg-background-dark/50 backdrop-blur-sm">
+        <div class="px-6 md:px-12 py-8">
+          <div class="max-w-7xl mx-auto text-center">
+            <p class="text-sm text-gray-400">樹德科技大學 - AI智慧模擬創新基地 Creative x Design x AI | 電子競技與電腦娛樂科學系</p>
+            <p class="text-sm text-gray-500 mt-2">
+              <a href="https://github.com/stormteams/AIChat.git" target="_blank"
+                class="hover:text-white inline-flex items-center gap-1 transition-colors">
+                <svg class="size-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                </svg>
+                GitHub Open Source
+              </a>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</body>
+
+</html>

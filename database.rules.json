@@ -1,0 +1,148 @@
+{
+  "rules": {
+    "agents": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$agentId": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        "name": {
+          ".read": true,
+          ".write": false
+        },
+        "description": {
+          ".read": true,
+          ".write": false
+        },
+        "avatarImageUrl": {
+          ".read": true,
+          ".write": false
+        },
+        "knowledgeBases": {
+          ".read": true,
+          ".write": false
+        },
+        "llmConfig": {
+          ".read": false,
+          ".write": "auth != null"
+        },
+        "conversations": {
+          ".read": true,
+          ".write": true,
+          "$conversationId": {
+            ".read": true,
+            ".write": true,
+            "messages": {
+              ".read": true,
+              ".write": true
+            }
+          }
+        },
+        "profiles": {
+          ".read": true,
+          ".write": true,
+          "$profileId": {
+            ".read": true,
+            ".write": true
+          }
+        },
+        "sessionAnalytics": {
+          ".read": true,
+          ".write": true,
+          "$sessionId": {
+            ".read": true,
+            ".write": true
+          }
+        },
+        "notifications": {
+          ".read": true,
+          ".write": true,
+          "$notificationId": {
+            ".read": true,
+            ".write": true
+          }
+        },
+        "tokenStats": {
+          ".read": "auth != null",
+          ".write": true,
+          "$date": {
+            ".read": "auth != null",
+            ".write": true
+          },
+          "total": {
+            ".read": "auth != null",
+            ".write": true
+          }
+        },
+        "lineBotAnalytics": {
+          ".read": "auth != null",
+          ".write": true,
+          "users": {
+            ".read": "auth != null",
+            ".write": true,
+            "$userId": {
+              ".read": "auth != null",
+              ".write": true
+            }
+          },
+          "agentStats": {
+            ".read": "auth != null",
+            ".write": true,
+            "$date": {
+              ".read": "auth != null",
+              ".write": true
+            }
+          },
+          "aiStats": {
+            ".read": "auth != null",
+            ".write": true,
+            "$date": {
+              ".read": "auth != null",
+              ".write": true
+            }
+          },
+          "errorStats": {
+            ".read": "auth != null",
+            ".write": true,
+            "$date": {
+              ".read": "auth != null",
+              ".write": true
+            }
+          }
+        },
+        "lineBotConversations": {
+          ".read": "auth != null",
+          ".write": true,
+          "$userId": {
+            ".read": "auth != null",
+            ".write": true
+          }
+        }
+      }
+    },
+    "admin": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "system": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "users": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$userId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "userRoles": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$emailKey": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}

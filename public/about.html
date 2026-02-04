@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>關於 RAG 技術 - STU TechPlay</title>
+    <meta name="description" content="深入了解 RAG (檢索增強生成) 技術如何在 STU TechPlay 中運作，提供精準、即時且具備專業知識的 AI 客服體驗。">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .step-line::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 48px;
+            bottom: -24px;
+            width: 2px;
+            background: linear-gradient(to bottom, #a855f7 0%, transparent 100%);
+        }
+
+        .step-line-last::before {
+            display: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .float-animation {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A2540",
+                        "background-dark": "#0D0C15",
+                        "accent-purple": "#a855f7",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="font-display bg-background-dark text-gray-300 antialiased">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <!-- Background Glows -->
+        <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
+            <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[150px]"></div>
+        </div>
+
+        <div class="relative z-10 flex h-full grow flex-col">
+            <!-- Header -->
+            <header
+                class="flex items-center justify-between whitespace-nowrap px-6 md:px-12 py-4 glass-card border-none bg-background-dark/50 backdrop-blur-md sticky top-0 z-50">
+                <div class="flex items-center gap-4 text-white">
+                    <a href="index.html" class="flex items-center gap-4">
+                        <div class="size-8 text-purple-400">
+                            <span class="material-symbols-outlined !text-3xl">hub</span>
+                        </div>
+                        <h2 class="text-white text-lg font-bold">STU TechPlay</h2>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                    <a class="hover:text-purple-400 transition-colors" href="index.html">首頁</a>
+                    <a class="text-white border-b-2 border-purple-500 pb-1" href="#about-rag">RAG 技術</a>
+                    <a class="hover:text-purple-400 transition-colors" href="#widget-guide">整合介紹</a>
+                    <a class="hover:text-purple-400 transition-colors" href="index.html#features">功能特色</a>
+                    <a class="hover:text-purple-400 transition-colors" href="index.html#docs">文件</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="https://github.com/stormteams/AIChat.git" target="_blank"
+                        class="flex items-center justify-center size-10 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                        title="GitHub Repo">
+                        <svg class="size-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                        </svg>
+                    </a>
+                    <a href="login.html"
+                        class="flex cursor-pointer items-center justify-center rounded-lg h-10 px-4 text-white text-sm font-medium hover:bg-white/10 transition-colors">登入</a>
+                    <a href="login.html"
+                        class="flex cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-white text-black text-sm font-bold hover:bg-gray-200 transition-colors">立即開始</a>
+                </div>
+            </header>
+
+            <main class="flex-1">
+                <!-- Hero Section -->
+                <section class="relative px-6 py-24 md:py-32 text-center max-w-5xl mx-auto overflow-hidden">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold mb-6 float-animation">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                        </span>
+                        技術詳解：檢索增強生成
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-8">
+                        賦予 AI <span class="gradient-text">專業知識</span> 的靈魂
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto">
+                        RAG (Retrieval-Augmented Generation) 是一種將大型語言模型與即時知識庫相結合的先進架構，讓您的 AI 不再只是「瞎猜」，而是具備事實根據的專家。
+                    </p>
+                </section>
+
+                <!-- What is RAG -->
+                <section id="about-rag" class="px-6 py-20 reveal">
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div>
+                            <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                                <span class="material-symbols-outlined text-purple-400">psychology</span>
+                                什麼是 RAG?
+                            </h2>
+                            <div class="space-y-6 text-gray-400 leading-relaxed">
+                                <p>
+                                    傳統的 AI 模型受限於其訓練數據的截止日期（Knowledge Cutoff）。RAG
+                                    透過在回應生成前，先從您的專屬知識庫中「檢索」最相關的資訊，並將其作為參考基礎提供給 AI。
+                                </p>
+                                <p>
+                                    這就像是給了 AI 一套「開放式圖書館」的存取權，當有人提問時，AI 會先去翻書，找到準確答案後再組織語言回答。
+                                </p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                                    <div class="p-4 rounded-xl glass-card">
+                                        <div class="text-purple-400 font-bold mb-1">精準度提升</div>
+                                        <div class="text-sm">大幅減少 AI 幻覺 (Hallucination)</div>
+                                    </div>
+                                    <div class="p-4 rounded-xl glass-card">
+                                        <div class="text-purple-400 font-bold mb-1">版本可控</div>
+                                        <div class="text-sm">隨時更新內容，AI 即刻同步</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div
+                                class="absolute -inset-1 bg-gradient-to-r from-purple-500/30 to-blue-500/30 blur opacity-30">
+                            </div>
+                            <div class="relative glass-card rounded-2xl p-8 border-white/5">
+                                <pre class="text-xs md:text-sm font-mono text-purple-300 overflow-x-auto">
+{
+  "Process": "RAG_WORKFLOW",
+  "Input": "用戶問題",
+  "Steps": [
+    "1. AI 意圖分析：提取關鍵字",
+    "2. 向量檢索：從數據庫找出匹配段落",
+    "3. 上下文構建：組合 Prompt",
+    "4. LLM 生成：具備專家知識的回應"
+  ],
+  "Target": "高精確度客服解決方案"
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Architecture Workflow -->
+                <section class="px-6 py-20 bg-black/40 reveal">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="text-center mb-16">
+                            <h2 class="text-3xl md:text-4xl font-black text-white mb-4">核心運作流程</h2>
+                            <p class="text-gray-400">標準化的 RAG 流程確保每一次回應都精準無誤</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div class="relative p-6 rounded-2xl glass-card border-none text-center">
+                                <div
+                                    class="size-12 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4 border border-purple-500/30">
+                                    <span class="material-symbols-outlined text-purple-400">search</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">1. 檢索 (Retrieval)</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">接收用戶提問後，系統會自動在數以萬計的知識庫文檔中，尋找最相關的內容段落。
+                                </p>
+                            </div>
+                            <div class="relative p-6 rounded-2xl glass-card border-none text-center">
+                                <div
+                                    class="size-12 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4 border border-blue-500/30">
+                                    <span class="material-symbols-outlined text-blue-400">query_stats</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">2. 精煉 (Refinement)</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">利用 AI 意圖分析過濾無用資訊，只保留對回答問題最有幫助的核心知識點。
+                                </p>
+                            </div>
+                            <div class="relative p-6 rounded-2xl glass-card border-none text-center">
+                                <div
+                                    class="size-12 rounded-full bg-indigo-500/20 flex items-center justify-center mx-auto mb-4 border border-indigo-500/30">
+                                    <span class="material-symbols-outlined text-indigo-400">add_comment</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">3. 增強 (Augmentation)</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">將檢索到的知識、對話歷史與系統角色設定進行高度融合，構建精確的 Prompt。
+                                </p>
+                            </div>
+                            <div class="relative p-6 rounded-2xl glass-card border-none text-center">
+                                <div
+                                    class="size-12 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                                    <span class="material-symbols-outlined text-emerald-400">auto_awesome</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">4. 生成 (Generation)</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">由高性能 LLM 生成最終回應，確保內容專業、擬人化且完全基於事實。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Technical Features -->
+                <section class="relative px-6 py-20 overflow-hidden reveal">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="flex flex-col md:flex-row gap-16">
+                            <div class="w-full md:w-1/3">
+                                <h2 class="text-3xl font-bold text-white mb-6">獨家技術優勢</h2>
+                                <p class="text-gray-400 mb-8 leading-relaxed">
+                                    我們在標準 RAG 之上，加入了針對教育與客服場景的特殊優化。
+                                </p>
+                                <div class="space-y-4">
+                                    <div
+                                        class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
+                                        <span class="material-symbols-outlined text-emerald-400">verified</span>
+                                        <span class="text-sm font-medium">教育專用權重系統</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
+                                        <span class="material-symbols-outlined text-emerald-400">verified</span>
+                                        <span class="text-sm font-medium">多語意交叉匹配</span>
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
+                                        <span class="material-symbols-outlined text-emerald-400">verified</span>
+                                        <span class="text-sm font-medium">動態知識庫補完</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div
+                                    class="p-8 rounded-3xl glass-card border-none hover:bg-white/5 transition-colors group">
+                                    <div
+                                        class="size-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined">filter_alt</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-4">AI 意圖分析</h3>
+                                    <p class="text-gray-400 text-sm leading-relaxed">
+                                        系統會自動分析用戶問題的深層意圖，提取核心關鍵字（包括中英文、隱含概念），顯著提升檢索階段的召回率與精確度。
+                                    </p>
+                                </div>
+                                <div
+                                    class="p-8 rounded-3xl glass-card border-none hover:bg-white/5 transition-colors group">
+                                    <div
+                                        class="size-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined">network_node</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-4">多層次檢索策略</h3>
+                                    <p class="text-gray-400 text-sm leading-relaxed">
+                                        結合預載入、標題匹配、內容權重與 AI 關鍵字比對。即使提問方式糢糊，也能精準定位到最合適的知識庫內容。
+                                    </p>
+                                </div>
+                                <div
+                                    class="p-8 rounded-3xl glass-card border-none hover:bg-white/5 transition-colors group">
+                                    <div
+                                        class="size-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined">pending_actions</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-4">關鍵字權重優化</h3>
+                                    <p class="text-gray-400 text-sm leading-relaxed">
+                                        專為教育場景設計的權重表（報名權重: 4, 學費權重: 4, 課程權重: 4），確保核心業務問題優先得到精確回答。
+                                    </p>
+                                </div>
+                                <div
+                                    class="p-8 rounded-3xl glass-card border-none hover:bg-white/5 transition-colors group">
+                                    <div
+                                        class="size-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined">account_tree</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-4">對話上下文感知</h3>
+                                    <p class="text-gray-400 text-sm leading-relaxed">
+                                        AI 會記住最近 10 次的對話內容，在檢索時考慮歷史背景，實現真正的連貫對話而非單次問答。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Front-end Widget Integration -->
+                <section id="widget-guide" class="px-6 py-20 bg-background-dark/50 reveal">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="text-center mb-16">
+                            <h2 class="text-3xl md:text-4xl font-black text-white mb-4">前端組件快速整合</h2>
+                            <p class="text-gray-400">只需三行程式碼，即可在任何網頁中嵌入強大的 AI 客服功能</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                            <div class="space-y-8">
+                                <div class="glass-card p-6 rounded-2xl border-none">
+                                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                        <span
+                                            class="material-symbols-outlined text-purple-400">integration_instructions</span>
+                                        基礎嵌入方式
+                                    </h3>
+                                    <p class="text-sm text-gray-400 mb-4">將以下程式碼貼在 HTML 的 &lt;body&gt; 標籤結束前：</p>
+                                    <div class="relative group">
+                                        <pre
+                                            class="text-xs font-mono bg-black/50 p-4 rounded-xl text-purple-300 overflow-x-auto ring-1 ring-white/10">
+&lt;!-- AI 客服組件 --&gt;
+&lt;ai-convai agent-id="YOUR_AGENT_ID"&gt;&lt;/ai-convai&gt;
+
+&lt;!-- 核心載入腳本 --&gt;
+&lt;script src="https://ees-ai.web.app/ai-convai-widget-standalone.js" async&gt;&lt;/script&gt;</pre>
+                                    </div>
+                                </div>
+
+                                <div class="glass-card p-6 rounded-2xl border-none">
+                                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-purple-400">settings</span>
+                                        進階選配參數 (Attributes)
+                                    </h3>
+                                    <div class="space-y-4">
+                                        <div class="flex gap-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                                            <code class="text-purple-400 font-bold shrink-0">agent-id</code>
+                                            <span class="text-sm text-gray-400">必填。您的代理人唯一識別碼。</span>
+                                        </div>
+                                        <div class="flex gap-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                                            <code class="text-purple-400 font-bold shrink-0">avatar-image-url</code>
+                                            <span class="text-sm text-gray-400">選填。自訂 AI 顯示頭像的圖片連結。</span>
+                                        </div>
+                                        <div class="flex gap-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                                            <code class="text-purple-400 font-bold shrink-0">data-prompt</code>
+                                            <span class="text-sm text-gray-400">選填。設為 "false" 可禁用桌面端的自動啟動提示。</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col justify-center">
+                                <div
+                                    class="p-8 rounded-3xl bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-500/20 shadow-2xl">
+                                    <h3 class="text-2xl font-bold text-white mb-6">組件具備的能力</h3>
+                                    <ul class="space-y-4">
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-purple-400">bolt</span>
+                                            <div>
+                                                <div class="text-white font-bold">全自動知識檢索</div>
+                                                <p class="text-xs text-gray-500">內建 RAG 邏輯，自動根據用戶問題匹配最相關的知識庫內容。</p>
+                                            </div>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-purple-400">face</span>
+                                            <div>
+                                                <div class="text-white font-bold">動態人物誌與記憶</div>
+                                                <p class="text-xs text-gray-500">自動分析對話細節，建立並持續更新使用者的人物資訊檔案。</p>
+                                            </div>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-purple-400">smart_display</span>
+                                            <div>
+                                                <div class="text-white font-bold">YouTube 影片內容內嵌</div>
+                                                <p class="text-xs text-gray-500">當 AI 提及 YouTube 影片時，組件會自動在對話框內生成播放器。
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span class="material-symbols-outlined text-purple-400">markdown</span>
+                                            <div>
+                                                <div class="text-white font-bold">Markdown 內容渲染</div>
+                                                <p class="text-xs text-gray-500">支援標題、清單、粗體及連結，讓回覆內容層次分明且易於閱讀。</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Educational Optimization -->
+                <section class="px-6 py-20 bg-gradient-to-b from-transparent to-purple-900/10 reveal">
+                    <div class="max-w-4xl mx-auto text-center">
+                        <h2 class="text-3xl font-bold text-white mb-8">教育場景深度特化</h2>
+                        <div class="p-8 rounded-3xl glass-card border-purple-500/20 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4">
+                                <span class="material-symbols-outlined text-purple-500/20 !text-6xl">school</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left relative z-10">
+                                <div class="space-y-4">
+                                    <h4 class="text-purple-400 font-bold border-l-4 border-purple-500 pl-4">核心教育關鍵字</h4>
+                                    <ul class="text-sm text-gray-400 space-y-2">
+                                        <li>• 報名、註冊、入學、招生 (權重 4)</li>
+                                        <li>• 學費、費用、收費、學雜費 (權重 4)</li>
+                                        <li>• 課程、科目、學科、課表 (權重 4)</li>
+                                        <li>• 考試、測驗、成績、分數 (權重 4)</li>
+                                    </ul>
+                                </div>
+                                <div class="space-y-4">
+                                    <h4 class="text-purple-400 font-bold border-l-4 border-purple-500 pl-4">智能處理機制</h4>
+                                    <ul class="text-sm text-gray-400 space-y-2">
+                                        <li>• 自動生成推薦關鍵字提升匹配度</li>
+                                        <li>• 未命中知識庫時自動建立維護通知</li>
+                                        <li>• 支援多份獨立知識庫同時比對</li>
+                                        <li>• 動態權重調整，提高教育服務精準度</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Call to Action -->
+                <section class="px-6 py-24 reveal">
+                    <div
+                        class="max-w-5xl mx-auto rounded-[2.5rem] bg-gradient-to-r from-purple-600 to-indigo-600 p-12 text-center text-white relative overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent)]">
+                        </div>
+                        <h2 class="text-3xl md:text-5xl font-black mb-6 relative z-10">準備好體驗下一代 AI 嗎？</h2>
+                        <p class="text-purple-100 mb-10 text-lg relative z-10">只需幾分鐘，即可為您的網站注入具備深厚知識儲備的智能客服。</p>
+                        <div class="flex flex-col md:flex-row justify-center gap-4 relative z-10">
+                            <a href="login.html"
+                                class="px-8 py-4 bg-white text-purple-600 font-black rounded-xl hover:shadow-2xl hover:scale-105 transition-all">
+                                免費註冊帳號
+                            </a>
+                            <a href="index.html#contact"
+                                class="px-8 py-4 bg-purple-500/20 backdrop-blur-md border border-white/30 text-white font-black rounded-xl hover:bg-purple-500/30 transition-all">
+                                聯絡我們了解更多
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Footer -->
+            <footer class="relative z-10 border-t border-white/5 bg-background-dark/50 backdrop-blur-sm">
+                <div class="px-6 md:px-12 py-12">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="flex flex-col md:flex-row justify-between gap-12 mb-12">
+                            <div class="max-w-sm">
+                                <div class="flex items-center gap-3 text-white mb-6">
+                                    <div class="size-8 text-purple-400">
+                                        <span class="material-symbols-outlined !text-3xl">hub</span>
+                                    </div>
+                                    <h2 class="text-white text-xl font-bold">STU TechPlay</h2>
+                                </div>
+                                <p class="text-sm text-gray-500 leading-relaxed">
+                                    引領 AI 模擬與教學實踐。我們透過先進的 RAG 技術，為教育機構與企業提供更聰明、更精準的對話式解決方案。
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-2 lg:grid-cols-3 gap-12">
+                                <div>
+                                    <h4 class="text-white font-bold mb-4">產品功能</h4>
+                                    <ul class="text-sm text-gray-500 space-y-2">
+                                        <li><a href="#" class="hover:text-purple-400">智能代理</a></li>
+                                        <li><a href="#" class="hover:text-purple-400">嵌入式組件</a></li>
+                                        <li><a href="#" class="hover:text-purple-400">人物誌分析</a></li>
+                                        <li><a href="#" class="hover:text-purple-400">多模型切換</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold mb-4">技術文件</h4>
+                                    <ul class="text-sm text-gray-500 space-y-2">
+                                        <li><a href="#" class="hover:text-purple-400">快速開始</a></li>
+                                        <li><a href="#" class="hover:text-purple-400">API 參考</a></li>
+                                        <li><a href="#" class="hover:text-purple-400">RAG 技術詳解</a></li>
+                                        <li><a href="#" class="hover:text-purple-400">LINE Bot 整合</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold mb-4">聯絡資訊</h4>
+                                    <ul class="text-sm text-gray-500 space-y-2">
+                                        <li>樹德科技大學</li>
+                                        <li>電子競技與電腦娛樂科學系</li>
+                                        <li>kenson@stu.edu.tw</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-8 border-t border-white/5 text-center">
+                            <p class="text-xs text-gray-600">
+                                © 2024 STU TechPlay AI 智慧模擬創新基地. All rights reserved. Creative x Design x AI
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scroll Reveal Script -->
+    <script>
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

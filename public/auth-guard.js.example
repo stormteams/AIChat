@@ -1,0 +1,42 @@
+// 認證守衛 - 保護需要登入的頁面
+(function () {
+    'use strict';
+
+    // Firebase 配置 - 使用全域變數以便共用
+    window.firebaseConfig = {
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: ""
+    };
+
+    // 等待 Firebase SDK 載入
+    function checkAuth() {
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(window.firebaseConfig);
+            }
+            const auth = firebase.auth();
+
+            // 檢查認證狀態
+            auth.onAuthStateChanged((user) => {
+                const path = window.location.pathname;
+                const isAdminPage = path.includes('admin.html');
+
+                if (!user && isAdminPage) {
+                    // 未登入且在管理頁面，重定向到登入頁面
+                    window.location.href = 'login.html';
+                }
+            });
+        } else {
+            // 如果 Firebase 還沒載入，等待一下再檢查
+            setTimeout(checkAuth, 100);
+        }
+    }
+
+    // 開始檢查認證
+    checkAuth();
+})();

@@ -1,0 +1,27 @@
+{
+  "name": "ai-chat-line-bot-functions",
+  "description": "Firebase Functions for AI Chat LINE Bot integration",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^5.1.0",
+    "@line/bot-sdk": "^7.5.2",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "private": true
+}
